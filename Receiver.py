@@ -15,7 +15,6 @@ class Receiver:
 
         self.error_rate = error_rate
 
-        #TODO: Implement fast mode cause it's slow for more than 20 packets lmao
         self.fast_mode = fast_mode
 
         # print(self.result_message)
@@ -35,6 +34,7 @@ class Receiver:
 
         if self.fast_mode:
             self.to_decode.append(packet)
+
         self.received_packets.append(packet)
 
     def decode_packet(self):
