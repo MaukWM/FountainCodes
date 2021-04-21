@@ -10,9 +10,10 @@ import matplotlib.pyplot as plt
 
 class Simulator:
 
-    def __init__(self, source_size, distribution, error_rate):
+    def __init__(self, source_size, distribution, error_rate, fast_mode=True):
         self.source_size = source_size
         self.error_rate = error_rate
+        self.fast_mode = fast_mode
 
         if distribution == 'uniform':
             self.distribution = Uniform(source_size)
@@ -41,7 +42,7 @@ class Simulator:
 
     def simulate(self):
         self.sender = Sender(self.source_size, self.distribution)
-        self.receiver = Receiver(self.source_size, self.error_rate)
+        self.receiver = Receiver(self.source_size, self.error_rate, fast_mode=self.fast_mode)
 
         while None in self.receiver.result_message:
             self.send_packet()
@@ -76,17 +77,20 @@ class Simulator:
 
 if __name__ == "__main__":
     source_size = 100
-    error_rate = 0
-    sim_amount = 500
+    error_rate = 0.5
+    sim_amount = 1
 
-    sim_uniform = Simulator(source_size, 'uniform', error_rate)
+    sim_uniform = Simulator(source_size, 'uniform', error_rate, fast_mode=False)
     sim_uniform.run_simulations(sim_amount)
 
-    sim_oneshot = Simulator(source_size, 'one_shot', error_rate)
-    sim_oneshot.run_simulations(sim_amount)
+    sim_uniform_fast = Simulator(source_size, 'uniform', error_rate, fast_mode=True)
+    sim_uniform_fast.run_simulations(sim_amount)
 
-    sim_idealsoliton = Simulator(source_size, 'ideal_soliton', error_rate)
-    sim_idealsoliton.run_simulations(sim_amount)
-
-    sim_robustsoliton = Simulator(source_size, 'robust_soliton', error_rate)
-    sim_robustsoliton.run_simulations(sim_amount)
+    # sim_oneshot = Simulator(source_size, 'one_shot', error_rate)
+    # sim_oneshot.run_simulations(sim_amount)
+    #
+    # sim_idealsoliton = Simulator(source_size, 'ideal_soliton', error_rate)
+    # sim_idealsoliton.run_simulations(sim_amount)
+    #
+    # sim_robustsoliton = Simulator(source_size, 'robust_soliton', error_rate)
+    # sim_robustsoliton.run_simulations(sim_amount)
