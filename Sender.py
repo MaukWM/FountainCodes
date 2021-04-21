@@ -27,7 +27,7 @@ class Sender:
         for block_id in block_ids:
             value += self.source[block_id]
 
-        packet = Packet(value, block_ids)
+        packet = Packet(value, list(block_ids))
 
         return packet
 

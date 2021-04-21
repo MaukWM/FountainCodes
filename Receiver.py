@@ -9,13 +9,15 @@ class Receiver:
         self.result_message = [None] * source_size
 
         self.received_packets = []
-        self.to_decode = []
 
         self.total_received = 0
 
         self.error_rate = error_rate
 
         self.fast_mode = fast_mode
+
+        self.decoded_amount = 0
+        self.decoded = False
 
         # print(self.result_message)
 
@@ -24,7 +26,7 @@ class Receiver:
         self.total_received += 1
 
         if random.uniform(0, 1) < self.error_rate:
-            return
+            return False
 
         # Check and remove existing connections before adding packet
         for connection_id in packet.connections:
@@ -32,46 +34,27 @@ class Receiver:
                 packet.value -= self.result_message[connection_id]
                 packet.connections = np.delete(packet.connections, np.where(packet.connections == connection_id))
 
-        if self.fast_mode:
-            self.to_decode.append(packet)
-
         self.received_packets.append(packet)
 
+        return True
+
     def decode_packet(self):
-        # if self.fast_mode:
-        #     for packet in self.to_decode:
-        #         if len(packet.connections) == 1:
-        #             self.result_message[packet.connections[0]] = packet.value
-        #             self.to_decode = [pckt for pckt in self.to_decode if not (len(pckt.connections) == 1 and pckt.connections[0] == packet.connections[0])]
-        #             # self.to_decode.remove(packet)
-        #             return True
-        #     # Return false if nothing could be decoded
-        #     return False
-        #
-        # else:
-        # Check if there is a connection with degree 1
-        decoding = True
+        packet_len_1 = list(filter(lambda pckt: len(pckt.connections) == 1, self.received_packets))
 
-        while decoding:
-            decoding = False
-            for packet in self.received_packets:
-                if len(packet.connections) == 1:
-                    self.result_message[packet.connections[0]] = packet.value
+        if len(packet_len_1) == 0:
+            return False
 
-                    # if self.fast_mode:
-                    #     # Remove each packet with this connection
-                    #     self.to_decode = [pckt for pckt in self.to_decode if not (len(pckt.connections) == 1 and pckt.connections[0] == packet.connections[0])]
-                    #     self.to_decode.remove(packet)
-                    #     return True
-                    # else:
-                        # Better: remove each connection from each packet
-                    self.remove_connection(packet.connections[0], packet.value)
-                    decoding = True
-                    break
-                        # return True
+        dec_packet = packet_len_1[0]
+        self.result_message[dec_packet.connections[0]] = dec_packet.value
 
-        # Return false if nothing could be decoded
-        return False
+        self.remove_connection(dec_packet.connections[0], dec_packet.value)
+
+        self.decoded_amount += 1
+
+        if self.decoded_amount == self.source_size:
+            self.decoded = True
+
+        return True
 
     def remove_connection(self, connection_id, value):
         remaining_packets = []

@@ -35,7 +35,7 @@ class Simulator:
 
     def send_packet(self):
         packet = self.sender.create_packet()
-        self.receiver.receive(packet)
+        return self.receiver.receive(packet)
 
     def decode(self):
         return self.receiver.decode_packet()
@@ -44,9 +44,15 @@ class Simulator:
         self.sender = Sender(self.source_size, self.distribution)
         self.receiver = Receiver(self.source_size, self.error_rate, fast_mode=self.fast_mode)
 
-        while None in self.receiver.result_message:
-            self.send_packet()
-            self.decode()
+        successful_decode = False
+        successful_send = False
+
+        while not self.receiver.decoded:
+            # Send a packet and attempt to decode if it is received
+            if not successful_decode:
+                successful_send = self.send_packet()
+            if successful_send:
+                successful_decode = self.decode()
         # print(self.receiver.result_message)
         # print(self.receiver.total_received)
         return self.receiver.total_received
@@ -77,7 +83,7 @@ class Simulator:
 
 if __name__ == "__main__":
     source_size = 100
-    error_rate = 0.5
+    error_rate = 0.9
     sim_amount = 1
 
     sim_uniform = Simulator(source_size, 'uniform', error_rate, fast_mode=False)
