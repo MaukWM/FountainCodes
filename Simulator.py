@@ -15,6 +15,8 @@ class Simulator:
         self.error_rate = error_rate
         self.fast_mode = fast_mode
 
+        self.packet_len_1_sent = False
+
         if distribution == 'uniform':
             self.distribution = Uniform(source_size)
 
@@ -35,10 +37,11 @@ class Simulator:
 
     def send_packet(self):
         packet = self.sender.create_packet()
+        self.packet_len_1_sent = len(packet.connections) == 1
         return self.receiver.receive(packet)
 
-    def decode(self):
-        return self.receiver.decode_packet()
+    def decode(self, pckt1_sent=False):
+        return self.receiver.decode_packet(pckt1_sent=pckt1_sent)
 
     def simulate(self):
         self.sender = Sender(self.source_size, self.distribution)
@@ -52,7 +55,8 @@ class Simulator:
             if not successful_decode:
                 successful_send = self.send_packet()
             if successful_send:
-                successful_decode = self.decode()
+                successful_decode = self.decode(pckt1_sent=self.packet_len_1_sent)
+                self.packet_len_1_sent = False
         # print(self.receiver.result_message)
         # print(self.receiver.total_received)
         return self.receiver.total_received
@@ -82,12 +86,12 @@ class Simulator:
 
 
 if __name__ == "__main__":
-    source_size = 100
+    source_size = 75
     error_rate = 0.9
-    sim_amount = 1
+    sim_amount = 10
 
-    sim_uniform = Simulator(source_size, 'uniform', error_rate, fast_mode=False)
-    sim_uniform.run_simulations(sim_amount)
+    # sim_uniform = Simulator(source_size, 'uniform', error_rate, fast_mode=False)
+    # sim_uniform.run_simulations(sim_amount)
 
     sim_uniform_fast = Simulator(source_size, 'uniform', error_rate, fast_mode=True)
     sim_uniform_fast.run_simulations(sim_amount)

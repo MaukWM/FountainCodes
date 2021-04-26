@@ -38,13 +38,19 @@ class Receiver:
 
         return True
 
-    def decode_packet(self):
-        packet_len_1 = list(filter(lambda pckt: len(pckt.connections) == 1, self.received_packets))
+    def decode_packet(self, pckt1_sent=False):
+        if not pckt1_sent:
+            packet_len_1 = list(filter(lambda pckt: len(pckt.connections) == 1, self.received_packets))
 
-        if len(packet_len_1) == 0:
-            return False
+            if len(packet_len_1) == 0:
+                return False
 
-        dec_packet = packet_len_1[0]
+            dec_packet = packet_len_1[0]
+        else:
+            dec_packet = self.received_packets.pop()
+            if len(dec_packet.connections) == 0:
+                return False
+
         self.result_message[dec_packet.connections[0]] = dec_packet.value
 
         self.remove_connection(dec_packet.connections[0], dec_packet.value)
