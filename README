@@ -2,3 +2,10 @@ required:
 
 numpy
 matplotlib
+
+How to use:
+
+In the main of Simulator.py a Simulator can be instantiated with a distribution ('one_shot', 'uniform', 'ideal_soliton', 'robust_soliton').
+The source size, error rate, and amount of simulations can be specified in the main as well.
+
+After the simulation is done it will print some stats in the console and if you are using PyCharm it will display a histogram of the amount of packets required during the simulation.
