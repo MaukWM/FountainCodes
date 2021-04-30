@@ -71,14 +71,17 @@ class Simulator:
         for i in range(amount):
             total_packets_received.append(self.simulate())
 
-        plt.hist(total_packets_received, density=True, bins=50)
+        plt.hist(total_packets_received, density=True, bins=30)
 
+        plt.xlim(left=0)
         plt.xlabel("Total amount of packets received")
         # TODO: ylabel?
 
         plt.show()
 
         print("Mean: {:.2f}".format(np.mean(total_packets_received)))
+        print("Best: {:.2f}".format(np.min(total_packets_received)))
+        print("Worst: {:.2f}".format(np.max(total_packets_received)))
         print("Standard deviation: {:.2f}".format(np.std(total_packets_received)))
         print("Efficiency: {}".format(self.source_size / np.average(total_packets_received)))
         print("Total time: {:.2f} seconds".format(time.time() - start))
@@ -86,21 +89,21 @@ class Simulator:
 
 
 if __name__ == "__main__":
-    source_size = 75
-    error_rate = 0.9
-    sim_amount = 10
+    source_size = 25
+    error_rate = 0.50
+    sim_amount = 5000
 
     # sim_uniform = Simulator(source_size, 'uniform', error_rate, fast_mode=False)
     # sim_uniform.run_simulations(sim_amount)
 
-    sim_uniform_fast = Simulator(source_size, 'uniform', error_rate, fast_mode=True)
+    sim_oneshot = Simulator(source_size, 'one_shot', error_rate)
+    sim_oneshot.run_simulations(sim_amount)
+
+    sim_uniform_fast = Simulator(source_size, 'uniform', error_rate)
     sim_uniform_fast.run_simulations(sim_amount)
 
-    # sim_oneshot = Simulator(source_size, 'one_shot', error_rate)
-    # sim_oneshot.run_simulations(sim_amount)
-    #
-    # sim_idealsoliton = Simulator(source_size, 'ideal_soliton', error_rate)
-    # sim_idealsoliton.run_simulations(sim_amount)
-    #
-    # sim_robustsoliton = Simulator(source_size, 'robust_soliton', error_rate)
-    # sim_robustsoliton.run_simulations(sim_amount)
+    sim_idealsoliton = Simulator(source_size, 'ideal_soliton', error_rate)
+    sim_idealsoliton.run_simulations(sim_amount)
+
+    sim_robustsoliton = Simulator(source_size, 'robust_soliton', error_rate)
+    sim_robustsoliton.run_simulations(sim_amount)

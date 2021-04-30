@@ -1,6 +1,7 @@
 import numpy as np
 import random
 
+
 class Receiver:
 
     def __init__(self, source_size, error_rate, fast_mode=True):
