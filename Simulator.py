@@ -89,18 +89,18 @@ class Simulator:
 
 
 if __name__ == "__main__":
-    source_size = 25
-    error_rate = 0.50
+    source_size = 10
+    error_rate = 0.99
     sim_amount = 5000
 
     # sim_uniform = Simulator(source_size, 'uniform', error_rate, fast_mode=False)
     # sim_uniform.run_simulations(sim_amount)
 
-    sim_oneshot = Simulator(source_size, 'one_shot', error_rate)
-    sim_oneshot.run_simulations(sim_amount)
-
-    sim_uniform_fast = Simulator(source_size, 'uniform', error_rate)
-    sim_uniform_fast.run_simulations(sim_amount)
+    # sim_oneshot = Simulator(source_size, 'one_shot', error_rate)
+    # sim_oneshot.run_simulations(sim_amount)
+    #
+    # sim_uniform_fast = Simulator(source_size, 'uniform', error_rate)
+    # sim_uniform_fast.run_simulations(sim_amount)
 
     sim_idealsoliton = Simulator(source_size, 'ideal_soliton', error_rate)
     sim_idealsoliton.run_simulations(sim_amount)

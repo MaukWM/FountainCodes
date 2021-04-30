@@ -5,7 +5,7 @@ import numpy as np
 import random
 
 
-class Distribution():
+class Distribution:
 
     def __init__(self, source_size):
         self.source_size = source_size
@@ -45,8 +45,8 @@ class IdealSoliton(Distribution):
         for i in range(2, self.source_size + 1):
             self.probabilities.append(1/(i*(i - 1)))
 
-        print(self.probabilities)
-        print(np.sum(self.probabilities))
+        # print(self.probabilities)
+        # print(np.sum(self.probabilities))
 
     def sample_from_dist(self):
         return np.random.choice(np.arange(1, self.source_size + 1), p=self.probabilities)
@@ -79,8 +79,8 @@ class RobustSoliton(Distribution):
 
             self.probabilities = self.probabilities/np.sum(self.probabilities)
 
-        print(self.probabilities)
-        print(np.sum(self.probabilities))
+        # print(self.probabilities)
+        # print(np.sum(self.probabilities))
 
     def sample_from_dist(self):
         return np.random.choice(np.arange(1, self.source_size + 1), p=self.probabilities)

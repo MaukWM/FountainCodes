@@ -12,8 +12,6 @@ class Sender:
 
         self.distribution = distribution
 
-        # TODO: Add error rate
-
         self.source = np.random.randint(1, source_size, source_size)
 
         # print(self.source)
